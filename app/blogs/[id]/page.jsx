@@ -1,6 +1,7 @@
 'use client'
 import { assets, blog_data } from '@/assets/assets';
 import Footer from '@/components/Footer';
+import axios from 'axios';
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useEffect, useState, use } from 'react'
@@ -10,14 +11,13 @@ const page = ({ params }) => {
 
     const [data, setData] = useState(null);
 
-    const fetchBlogData = () => {
-        for (let i = 0; i < blog_data.length; i++) {
-            if (blog_data[i].id === Number(resolvedParams.id)) {
-                setData(blog_data[i]);
-                console.log(blog_data[i]);
-                break;
+    const fetchBlogData = async () => {
+        const response = await axios.get('/api/blog', {
+            params:{
+                id: resolvedParams.id,
             }
-        }
+        })
+        setData(response.data);
     }
 
     useEffect(() => {
@@ -35,26 +35,18 @@ const page = ({ params }) => {
             </div>
             <div className='text-center my-24'>
                 <h1 className='text-2xl sm:text-5xl font-semibold max-w-[700px] mx-auto'>{data.title}</h1>
-                <Image className='mx-auto mt-6 border border-white rounded-full' src={data.author_img} width={60} height={60} alt='' />
+                <Image className='mx-auto mt-6 border border-white rounded-full' src={data.authorImg} width={60} height={60} alt='' />
                 <p className='mt-1 pb-2 text-lg max-w-[740px] mx-auto'>{data.author}</p>
             </div>
         </div>
         <div className='mx-5 max-w-[800px] md:mx-auto mt-[-100px] mb-10'>
             <Image className='border-4 border-white' src={data.image} width={1280} height={720} alt='' />
-            <h1 className='my-8 text-[26px] font-semibold'>Introduction:</h1>
-            <p>{data.description}</p>
-            <h3 className='my-5 text-[18px] font-semibold'>Step 1: Self Reflection and Goal Setting</h3>
-            <p className='my-3'>Note that this uses the layout and text from your example image rather than the dynamic data loading from your original code. You can merge the two approaches as needed.</p>
-            <p className='my-3'>Note that this uses the layout and text from your example image rather than the dynamic data loading from your original code. You can merge the two approaches as needed.</p>
-            <h3 className='my-5 text-[18px] font-semibold'>Step 2: Self Reflection and Goal Setting</h3>
-            <p className='my-3'>Note that this uses the layout and text from your example image rather than the dynamic data loading from your original code. You can merge the two approaches as needed.</p>
-            <p className='my-3'>Note that this uses the layout and text from your example image rather than the dynamic data loading from your original code. You can merge the two approaches as needed.</p>
-            <h3 className='my-5 text-[18px] font-semibold'>Step 3: Self Reflection and Goal Setting</h3>
-            <p className='my-3'>Note that this uses the layout and text from your example image rather than the dynamic data loading from your original code. You can merge the two approaches as needed.</p>
-            <p className='my-3'>Note that this uses the layout and text from your example image rather than the dynamic data loading from your original code. You can merge the two approaches as needed.</p>
-            <h3 className='my-5 text-[18px] font-semibold'>Conclusion</h3>
-            <p className='my-3'>Note that this uses the layout and text from your example image rather than the dynamic data loading from your original code. You can merge the two approaches as needed.</p>
-            <p className='my-3'>Note that this uses the layout and text from your example image rather than the dynamic data loading from your original code. You can merge the two approaches as needed.</p>
+            
+            {/* <p>
+                {data.description}
+            </p> */}
+
+            <div className='blog-content' dangerouslySetInnerHTML={{__html:data.description}}></div>
 
             <div className='my-24'>
                 <p className='text-black font font-semibold my-4'>Share this article on social media</p>
